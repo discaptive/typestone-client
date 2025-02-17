@@ -34,8 +34,8 @@ The [`typestone-app`](https://github.com/apps/typestone-app) is installed, so th
 The website checks if there's a `.no-typestone` file and decide to host or not.
 
 > **Note** -
+>
 > Works same like `.nojekyll` file.
-> You do not need this file to use API only.
 
 ### Publish a post
 
@@ -60,7 +60,9 @@ To maintain consistency, blog content should be organized within the repository 
   ```
 
   > **Note** -
+  >
   > All the images are recommended to be in the same directory and link it in relative ways.
+  >
   > Of course we allow to use hyperlinks for the image .
 
 - `settings.json` - A file containing metadata for a configuration. It contains `username`, `navigations` for top nav bar and `giscus` for the comments.
