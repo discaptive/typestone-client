@@ -1,5 +1,5 @@
 import { app } from "@/services/octokit";
-import { invalidateCache } from "@/services/redis";
+import { invalidateCache } from "@/services/supabase";
 import { deleteKey } from "@/services/supabase";
 
 export async function POST(req: Request) {

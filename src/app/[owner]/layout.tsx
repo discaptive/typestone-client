@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { MetadataProvider } from "@/context/metadata-context";
-import { cacheMetadata, getCachedMetadata } from "@/services/redis";
+import { cacheMetadata, getCachedMetadata } from "@/services/supabase";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

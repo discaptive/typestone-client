@@ -7,7 +7,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
 import { toString } from "hast-util-to-string";
-import { cacheMetadata, getCachedMetadata } from "@/services/redis";
+import { cacheMetadata, getCachedMetadata } from "@/services/supabase";
 
 export function parseDate(post: Post) {
   if (post.date) {

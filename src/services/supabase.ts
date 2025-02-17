@@ -1,6 +1,15 @@
-import { ApiKey } from "@/lib/types";
+"use server";
+
+import { ApiKey, Metadata } from "@/lib/types";
 import { single } from "@/lib/utils";
 import { createClient } from "@supabase/supabase-js";
+import { getInstallationID } from "./octokit";
+import {
+  cloneUserRepo,
+  deleteRepoDirectory,
+  generateMetadata,
+  hasNoTypestone,
+} from "./git";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -56,4 +65,47 @@ export async function deleteKey(owner: string) {
   if (error) return false;
 
   return true;
+}
+
+export async function cacheMetadata(owner: string) {
+  const installationId = await getInstallationID(owner);
+  if (!installationId) {
+    return false;
+  }
+
+  const cloneResult = await cloneUserRepo(owner);
+  if (!cloneResult) {
+    return false;
+  }
+
+  const noTypestone = hasNoTypestone(owner);
+  if (noTypestone) {
+    deleteRepoDirectory(owner);
+    return false;
+  }
+
+  const metadata = await generateMetadata(owner);
+  deleteRepoDirectory(owner);
+
+  const { error } = await supabase.from("metadata").insert({ owner, metadata });
+
+  if (error) return false;
+
+  return true;
+}
+
+export async function getCachedMetadata(owner: string) {
+  const { data, error } = await supabase
+    .from("metadata")
+    .select("metadata")
+    .eq("owner", owner)
+    .single();
+
+  if (error) return null;
+
+  return data.metadata as Metadata;
+}
+
+export async function invalidateCache(owner: string) {
+  await supabase.from("metadata").delete().eq("owner", owner);
 }

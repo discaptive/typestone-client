@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { cacheMetadata, getCachedMetadata } from "@/services/redis";
+import { cacheMetadata, getCachedMetadata } from "@/services/supabase";
 import { extractHrefFromPath } from "@/lib/utils";
 
 export async function generateMetadata({
