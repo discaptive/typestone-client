@@ -1,7 +1,13 @@
 import { Post } from "@/lib/types";
 import Link from "next/link";
 
-export default function AsideBar({ posts }: { posts: Post[] }) {
+export default function AsideBar({
+  posts,
+  current = "",
+}: {
+  posts: Post[];
+  current?: string;
+}) {
   const tagCounts = posts
     .flatMap((post) => post.tags ?? []) // Flatten the tags array
     .reduce((acc, tag) => {
@@ -24,7 +30,11 @@ export default function AsideBar({ posts }: { posts: Post[] }) {
               return (
                 <Link
                   key={key}
-                  className="font-mono text-sm text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  className={`font-mono text-sm ${
+                    current === key
+                      ? "font-extrabold text-blue-600"
+                      : "text-gray-600"
+                  }  hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400`}
                   href={`/tag/${key}`}
                   prefetch
                 >

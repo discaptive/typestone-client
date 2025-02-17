@@ -25,12 +25,12 @@ export default function Tag() {
     <div className="space-y-8 pb-12 pt-16">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
-          All Posts
+          {decodeURIComponent(tag)}
         </h1>
       </div>
 
       <div className="flex flex-col gap-8 md:flex-row">
-        <AsideBar posts={posts} />
+        <AsideBar posts={posts} current={decodeURIComponent(tag)} />
 
         <div className="min-w-0 flex-1">
           <ul className="divide-y divide-gray-200 dark:divide-gray-800">
