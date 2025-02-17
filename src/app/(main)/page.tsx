@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
+import { all } from "lowlight";
 
 import "highlight.js/styles/github-dark-dimmed.css";
 
@@ -14,7 +15,15 @@ export default function Index() {
       <ReactMarkdown
         className="break-words"
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight, rehypeSlug]}
+        rehypePlugins={[
+          [
+            rehypeHighlight,
+            {
+              languages: all,
+            },
+          ],
+          rehypeSlug,
+        ]}
         components={{
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           a: ({ node, ...props }) => <a {...props} target="_blank" />,

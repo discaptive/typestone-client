@@ -12,7 +12,7 @@ import TableOfContents from "@/components/posts/table-of-contents";
 import ReactMarkdown from "react-markdown";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
-
+import { all } from "lowlight";
 import Giscus from "@giscus/react";
 import { useTheme } from "next-themes";
 import remarkGfm from "remark-gfm";
@@ -153,7 +153,15 @@ export default function Post() {
                   <ReactMarkdown
                     className="break-words"
                     remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeHighlight, rehypeSlug]}
+                    rehypePlugins={[
+                      [
+                        rehypeHighlight,
+                        {
+                          languages: all,
+                        },
+                      ],
+                      rehypeSlug,
+                    ]}
                     components={{
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       a: ({ node, ...props }) => (
