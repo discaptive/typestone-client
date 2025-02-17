@@ -75,15 +75,15 @@ export const generateMetadata = async (owner: string): Promise<Metadata> => {
       metadata.username = settings.username;
     }
 
-    if (settings.navigations.length !== 0) {
+    if (settings.navigations) {
       metadata.navigations = settings.navigations;
     }
 
     if (settings.giscus) {
       metadata.giscus = settings.giscus;
     }
-  } catch {
-    // console.log("settings.json is not detected");
+  } catch (error) {
+    console.log("settings.json has wrong format:", error);
   }
 
   const dirs = fs.readdirSync(tmpPath);
