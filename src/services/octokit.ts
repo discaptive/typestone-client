@@ -1,3 +1,5 @@
+"use server";
+
 import { App } from "octokit";
 
 export class Octokit {
