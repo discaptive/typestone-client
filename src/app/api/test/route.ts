@@ -1,7 +1,7 @@
 import simpleGit from "simple-git";
 
 export async function GET() {
-  const path = "/tmp/discaptive";
+  const path = "/tmp";
   const git = simpleGit(path);
 
   await git.clone(`https://github.com/discaptive/typestone-data.git`, ".", [
