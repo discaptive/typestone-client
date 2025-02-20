@@ -2,7 +2,6 @@ import simpleGit from "simple-git";
 import fs from "fs";
 import path from "path";
 import fm from "front-matter";
-import { execSync } from "child_process";
 
 import { Collection, PostFrontMatter, SettingsSchema } from "@/lib/types";
 import { Utils } from "@/lib/utils";
@@ -33,9 +32,6 @@ export class Git {
     this.makeRepoDirectory(owner);
 
     try {
-      const gitVersion = execSync("git --version").toString();
-      console.log("Git is available:", gitVersion);
-
       const git = simpleGit(path);
 
       await git.clone(`https://github.com/${owner}/${repo}.git`, ".", [
@@ -57,7 +53,8 @@ export class Git {
       await git.checkout();
 
       return true;
-    } catch {
+    } catch (error) {
+      console.log(error);
       return false;
     }
   }
