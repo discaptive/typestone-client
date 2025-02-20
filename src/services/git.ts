@@ -16,17 +16,17 @@ export class Git {
   }
 
   static deleteRepoDirectory(owner: string) {
-    const path = `/tmp/${owner}`;
+    const path = `./data/${owner}`;
     fs.rmSync(path, { recursive: true, force: true });
   }
 
   private static makeRepoDirectory(owner: string) {
-    const path = `/tmp/${owner}`;
+    const path = `./data/${owner}`;
     fs.mkdirSync(path, { recursive: true });
   }
 
   static async clone(owner: string, repo: string) {
-    const path = `/tmp/${owner}`;
+    const path = `./data/${owner}`;
 
     this.deleteRepoDirectory(owner);
     this.makeRepoDirectory(owner);
@@ -60,7 +60,7 @@ export class Git {
   }
 
   static createCollection(owner: string, repository: string, branch: string) {
-    const localPath = `/tmp/${owner}`;
+    const localPath = `./data/${owner}`;
 
     const collection: Collection = {
       owner: owner,
@@ -138,7 +138,7 @@ export class Git {
   }
 
   static hasTypestone(owner: string): boolean {
-    const tmpPath = `/tmp/${owner}`;
+    const tmpPath = `./data/${owner}`;
 
     try {
       fs.readFileSync(path.join(tmpPath, ".typestone"), "utf-8");
