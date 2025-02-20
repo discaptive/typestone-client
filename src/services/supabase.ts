@@ -1,5 +1,3 @@
-"use server";
-
 import { Collection, Post, Settings } from "@/lib/types";
 import { createClient } from "@supabase/supabase-js";
 
