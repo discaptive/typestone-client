@@ -3,5 +3,14 @@
     "deploymentEnabled": {
       "main": false
     }
-  }
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "prebuild": "apt-get update && apt-get install -y git"
+      }
+    }
+  ]
 }
