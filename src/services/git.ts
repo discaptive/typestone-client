@@ -16,23 +16,23 @@ export class Git {
   }
 
   static deleteRepoDirectory(owner: string) {
-    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
-    fs.rmSync(_path, { recursive: true, force: true });
+    const path = `/tmp/${owner}`;
+    fs.rmSync(path, { recursive: true, force: true });
   }
 
   private static makeRepoDirectory(owner: string) {
-    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
-    fs.mkdirSync(_path, { recursive: true });
+    const path = `/tmp/${owner}`;
+    fs.mkdirSync(path, { recursive: true });
   }
 
   static async clone(owner: string, repo: string) {
-    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
+    const path = `/tmp/${owner}`;
 
     this.deleteRepoDirectory(owner);
     this.makeRepoDirectory(owner);
 
     try {
-      const git = simpleGit(_path);
+      const git = simpleGit(path);
 
       await git.clone(`https://github.com/${owner}/${repo}.git`, ".", [
         "--no-checkout",
@@ -59,7 +59,7 @@ export class Git {
   }
 
   static createCollection(owner: string, repository: string, branch: string) {
-    const localPath = `./tmp/${owner}`;
+    const localPath = `/tmp/${owner}`;
 
     const collection: Collection = {
       owner: owner,
@@ -137,7 +137,7 @@ export class Git {
   }
 
   static hasTypestone(owner: string): boolean {
-    const tmpPath = `./tmp/${owner}`;
+    const tmpPath = `/tmp/${owner}`;
 
     try {
       fs.readFileSync(path.join(tmpPath, ".typestone"), "utf-8");
