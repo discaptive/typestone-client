@@ -1,5 +1,3 @@
-"use server";
-
 import { Git } from "@/services/git";
 import { Octokit } from "@/services/octokit";
 import { Supabase } from "@/services/supabase";
