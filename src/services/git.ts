@@ -16,23 +16,23 @@ export class Git {
   }
 
   static deleteRepoDirectory(owner: string) {
-    const path = `./tmp/${owner}`;
-    fs.rmSync(path, { recursive: true, force: true });
+    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
+    fs.rmSync(_path, { recursive: true, force: true });
   }
 
   private static makeRepoDirectory(owner: string) {
-    const path = `./tmp/${owner}`;
-    fs.mkdirSync(path, { recursive: true });
+    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
+    fs.mkdirSync(_path, { recursive: true });
   }
 
   static async clone(owner: string, repo: string) {
-    const path = `./tmp/${owner}`;
+    const _path = path.join(path.join(process.cwd(), `./tmp/${owner}`));
 
     this.deleteRepoDirectory(owner);
     this.makeRepoDirectory(owner);
 
     try {
-      const git = simpleGit(path);
+      const git = simpleGit(_path);
 
       await git.clone(`https://github.com/${owner}/${repo}.git`, ".", [
         "--no-checkout",
