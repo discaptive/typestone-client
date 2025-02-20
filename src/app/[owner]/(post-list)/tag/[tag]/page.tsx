@@ -2,16 +2,16 @@
 
 import AsideBar from "@/components/aside-bar";
 import PostPreview from "@/components/posts/post-preview";
-import { MetadataContext } from "@/context/metadata-context";
-import { sortOutPosts } from "@/lib/utils";
+import { CollectionContext } from "@/context/collection-context";
+import { Utils } from "@/lib/utils";
 import { notFound, useParams } from "next/navigation";
 import { useContext } from "react";
 
 export default function Tag() {
   const { tag } = useParams<{ tag: string }>();
 
-  const metadata = useContext(MetadataContext);
-  const posts = sortOutPosts(metadata.posts);
+  const collection = useContext(CollectionContext);
+  const posts = Utils.sortOutPosts(collection.posts);
 
   const filteredPosts = posts.filter((post) =>
     post.tags?.includes(decodeURIComponent(tag))

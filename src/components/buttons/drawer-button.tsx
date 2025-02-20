@@ -1,9 +1,15 @@
-import { Post } from "@/lib/types";
+import { Navigation, Post } from "@/lib/types";
 import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function DrawerButton({ posts }: { posts: Post[] }) {
+export default function DrawerButton({
+  navigations,
+  posts,
+}: {
+  navigations?: Navigation[];
+  posts: Post[];
+}) {
   const tagCounts = posts
     .flatMap((post) => post.tags ?? []) // Flatten the tags array
     .reduce((acc, tag) => {
@@ -88,6 +94,26 @@ export default function DrawerButton({ posts }: { posts: Post[] }) {
                   />
                 </svg>
               </Button>
+            </div>
+
+            <DialogTitle className="font-bold">Navigations</DialogTitle>
+
+            <div className="flex flex-col gap-1">
+              {navigations?.map((navigation) => {
+                return (
+                  <Link
+                    key={navigation.path}
+                    href={navigation.path ?? "/"}
+                    className="py-2 flex items-center"
+                    onClick={() => setIsOpen(false)}
+                    prefetch
+                  >
+                    <div className="text-sm font-medium text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
+                      {navigation.title}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             <DialogTitle className="font-bold">Tags</DialogTitle>

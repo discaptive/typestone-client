@@ -25,17 +25,17 @@ Inspired by [tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-ne
 
 ## Configuration
 
-### Create a repository named `typestone`
-
-❗️ The repository name must be `typestone`.
+### Create a repository
 
 ❗️ The repository is `public`, otherwise visitors will not be able to see the posts.
+
+❗️ Add `.typestone` file so the client updates every single change.
 
 ### Install the `typestone-app` to the repository
 
 The [`typestone-app`](https://github.com/apps/typestone-app) is installed, so that works on your repository.
 
-### `[!Optional]` Add `.no-typestone` not to host on [typestone.io](https://typestone.io)
+### (DISABELD) `[!Optional]` Add `.no-typestone` not to host on [typestone.io](https://typestone.io)
 
 The website checks if there's a `.no-typestone` file and decide to host or not.
 
@@ -103,7 +103,7 @@ To maintain consistency, blog content should be organized within the repository 
 
 ## Advanced usage
 
-### API Integration
+### (DISABELD) API Integration
 
 Developers can fetch blog content via API, making it easy to integrate with other applications.
 

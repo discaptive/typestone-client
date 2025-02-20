@@ -1,8 +1,6 @@
 "use client";
 
 import ScrollToTop from "@/components/buttons/scroll-to-top";
-import { MetadataContext } from "@/context/metadata-context";
-import { extractHrefFromPath, getFullImageURL } from "@/lib/utils";
 import { format } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,6 +14,8 @@ import { all } from "lowlight";
 import Giscus from "@giscus/react";
 import { useTheme } from "next-themes";
 import remarkGfm from "remark-gfm";
+import { CollectionContext } from "@/context/collection-context";
+import { Utils } from "@/lib/utils";
 
 import "highlight.js/styles/github-dark-dimmed.css";
 
@@ -25,34 +25,15 @@ export default function Post() {
     "post-slug": string;
   }>();
 
-  const metadata = useContext(MetadataContext);
+  const collection = useContext(CollectionContext);
 
-  const post = metadata.posts.find((post) => {
-    return (
-      extractHrefFromPath(post.path) ===
-      String(`/${decodeURIComponent(postSlug)}`)
-    );
+  const post = collection.posts.find((post) => {
+    return Utils.getSlug(post.path) === decodeURIComponent(postSlug);
   });
 
   if (!post) {
     notFound();
   }
-
-  const currentPath = post.path.split("/content.md")[0];
-
-  const imageRegex = /!\[(.*?)\]\((.+?)\)/g;
-
-  const body = post.body.replace(
-    imageRegex,
-    (_: string, alt: string, link: string): string => {
-      return `![${alt}](${getFullImageURL(
-        owner,
-        link,
-        currentPath,
-        metadata.branch
-      )})`;
-    }
-  );
 
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -66,11 +47,11 @@ export default function Post() {
     datePublished: post.date,
     dateModified: post.date,
     description: post.summary,
-    url: `https://${owner}.typestone.io${extractHrefFromPath(post.path)}`,
+    url: `https://${owner}.typestone.io/${Utils.getSlug(post.path)}`,
     author: [
       {
         "@type": "Person",
-        name: metadata.username,
+        name: collection.settings.username ?? owner,
       },
     ],
   };
@@ -127,7 +108,7 @@ export default function Post() {
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
                         <dt className="sr-only">Name</dt>
                         <dd className="text-gray-900 dark:text-gray-100">
-                          {metadata.username}
+                          {collection.settings.username ?? owner}
                         </dd>
                         <dt className="sr-only">GitHub</dt>
                         <dd>
@@ -148,7 +129,7 @@ export default function Post() {
 
               <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
                 <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">
-                  <TableOfContents body={body} />
+                  <TableOfContents body={post.body} />
 
                   <ReactMarkdown
                     className="break-words"
@@ -192,27 +173,29 @@ export default function Post() {
                       },
                     }}
                   >
-                    {body}
+                    {post.body}
                   </ReactMarkdown>
                 </div>
                 <div className="py-6 text-sm text-gray-700 dark:text-gray-300">
-                  {metadata.giscus &&
-                  metadata.giscus.repo &&
-                  metadata.giscus.repoId &&
-                  metadata.giscus.mapping ? (
+                  {collection.settings.giscus &&
+                  collection.settings.giscus.repo &&
+                  collection.settings.giscus.repoId &&
+                  collection.settings.giscus.mapping ? (
                     <Giscus
-                      repo={metadata.giscus.repo}
-                      repoId={metadata.giscus.repoId}
-                      category={metadata.giscus.category}
-                      categoryId={metadata.giscus.categoryId}
-                      mapping={metadata.giscus.mapping}
-                      reactionsEnabled={metadata.giscus.reactionsEnabled}
-                      emitMetadata={metadata.giscus.emitMetadata}
-                      inputPosition={metadata.giscus.inputPosition}
+                      repo={collection.settings.giscus.repo}
+                      repoId={collection.settings.giscus.repoId}
+                      category={collection.settings.giscus.category}
+                      categoryId={collection.settings.giscus.categoryId}
+                      mapping={collection.settings.giscus.mapping}
+                      reactionsEnabled={
+                        collection.settings.giscus.reactionsEnabled
+                      }
+                      emitMetadata={collection.settings.giscus.emitMetadata}
+                      inputPosition={collection.settings.giscus.inputPosition}
                       theme={
                         mounted && resolvedTheme === "dark" ? "dark" : "light"
                       }
-                      lang={metadata.giscus.lang}
+                      lang={collection.settings.giscus.lang}
                     />
                   ) : undefined}
                 </div>

@@ -1,5 +1,5 @@
 import { Post } from "@/lib/types";
-import { extractHrefFromPath } from "@/lib/utils";
+import { Utils } from "@/lib/utils";
 import { format } from "date-fns";
 import Link from "next/link";
 
@@ -17,7 +17,7 @@ export default function PostPreview({ post }: { post: Post }) {
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                 <Link
                   className="break-words"
-                  href={extractHrefFromPath(post.path)}
+                  href={`/${Utils.getSlug(post.path)}`}
                   prefetch
                 >
                   {post.title}
@@ -45,7 +45,7 @@ export default function PostPreview({ post }: { post: Post }) {
 
           <Link
             className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-            href={extractHrefFromPath(post.path)}
+            href={`/${Utils.getSlug(post.path)}`}
             prefetch
           >
             Read article

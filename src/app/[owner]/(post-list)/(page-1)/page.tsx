@@ -3,16 +3,16 @@
 import AsideBar from "@/components/aside-bar";
 import PageChanger from "@/components/posts/page-changer";
 import PostPreview from "@/components/posts/post-preview";
-import { MetadataContext } from "@/context/metadata-context";
-import { chunkArray, sortOutPosts } from "@/lib/utils";
+import { CollectionContext } from "@/context/collection-context";
+import { Utils } from "@/lib/utils";
 import { useContext } from "react";
 
 // page 1
 export default function Latest() {
-  const metadata = useContext(MetadataContext);
-  const posts = sortOutPosts(metadata.posts);
+  const collection = useContext(CollectionContext);
+  const posts = Utils.sortOutPosts(collection.posts);
 
-  const chuncked = chunkArray(posts, 5);
+  const chuncked = Utils.chunkArray(posts, 5);
 
   return (
     <div className="space-y-8 pb-12 pt-16">

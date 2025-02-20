@@ -25,15 +25,15 @@ Typestone은 [GitHub 저장소](https://docs.github.com/repositories/creating-an
 
 ### `typestone`이라는 이름의 저장소 생성하기
 
-❗️ 저장소 이름은 반드시 `typestone`이어야 합니다.
-
 ❗️ 저장소는 `public(공개)`이어야 합니다. 그렇지 않으면 방문자가 게시글을 볼 수 없습니다.
+
+❗️ 저장소에 `.typestone` 파일을 추가하세요. 그래야 클라이언트가 변경사항을 반영할 수 있습니다.
 
 ### `typestone-app`을 저장소에 설치하기
 
 `typestone-app`이 설치되어 있어야 해당 저장소에서 정상적으로 작동합니다.
 
-### [선택사항] `.no-typestone` 파일을 추가하여 [typestone.io](https://typestone.io)에서 호스팅 제외하기
+### (DISABELD) [선택사항] `.no-typestone` 파일을 추가하여 [typestone.io](https://typestone.io)에서 호스팅 제외하기
 
 `.no-typestone` 파일이 존재하면 웹사이트에서 해당 저장소의 블로그를 호스팅하지 않습니다.
 
@@ -101,7 +101,7 @@ Typestone은 [GitHub 저장소](https://docs.github.com/repositories/creating-an
 
 ## 또 다른 사용 방법
 
-### API 연동
+### (DISABELD) API 통합
 
 개발자는 API를 통해 블로그 콘텐츠를 가져와 다른 애플리케이션과 쉽게 통합할 수 있습니다.
 

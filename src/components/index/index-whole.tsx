@@ -47,12 +47,14 @@ export default function IndexWhole({
     <>
       <div>
         <header className="bg-background flex items-center w-full justify-between py-10 sticky top-0 z-10">
-          <Link href="/" className="break-words" prefetch>
+          <Link href="/" className="group break-words" prefetch>
             <div className="flex items-center justify-between">
               <div className="sm:block hidden mr-3">
                 <Logo />
               </div>
-              <div className="text-2xl font-semibold">Typestone</div>
+              <div className="text-2xl font-semibold group-hover:underline">
+                Typestone
+              </div>
             </div>
           </Link>
 

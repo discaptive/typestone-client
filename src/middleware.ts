@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const NOT_TO_CHECK_PATHS = ["/"];
-
-export const config = {
-  matcher: [
-    "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)", // 제외할 경로 패턴
-  ],
-};
-
 export function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-  const hostname = req.headers.get("host") || "";
-  const { pathname } = url;
+  const hostname = req.headers.get("host")!;
+  const pathname = req.nextUrl.pathname;
 
-  let subdomainMatch = hostname.match(/^([^\.]+)\.typestone\.io$/);
+  let subdomainMatch = undefined;
 
   if (process.env.NODE_ENV === "development") {
     subdomainMatch = hostname.match(/^([^\.]+)\.localhost:3000$/);
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    subdomainMatch = hostname.match(/^([^\.]+)\.typestone\.io$/);
   }
 
   if (subdomainMatch) {
@@ -24,9 +19,9 @@ export function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL(`/${owner}${pathname}`, req.url));
   }
 
-  if (NOT_TO_CHECK_PATHS.includes(pathname)) {
-    return NextResponse.next();
-  }
-
-  return NextResponse.rewrite(new URL("/404", req.url));
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)"],
+};

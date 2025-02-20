@@ -1,6 +1,6 @@
 "use client";
 
-import { extractTOC } from "@/lib/utils";
+import { Utils } from "@/lib/utils";
 import { Button } from "@headlessui/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function TableOfContents({ body }: { body: string }) {
   const [isOpen, setIsOpen] = useState(true);
 
-  const toc = extractTOC(body);
+  const toc = Utils.extractTOC(body);
 
   return (
     <div>

@@ -3,8 +3,8 @@
 import AsideBar from "@/components/aside-bar";
 import PageChanger from "@/components/posts/page-changer";
 import PostPreview from "@/components/posts/post-preview";
-import { MetadataContext } from "@/context/metadata-context";
-import { chunkArray, sortOutPosts } from "@/lib/utils";
+import { CollectionContext } from "@/context/collection-context";
+import { Utils } from "@/lib/utils";
 import { notFound, useParams } from "next/navigation";
 import { useContext } from "react";
 
@@ -12,10 +12,10 @@ import { useContext } from "react";
 export default function Pagination() {
   const { page } = useParams<{ page: string }>();
 
-  const metadata = useContext(MetadataContext);
-  const posts = sortOutPosts(metadata.posts);
+  const collection = useContext(CollectionContext);
+  const posts = Utils.sortOutPosts(collection.posts);
 
-  const chuncked = chunkArray(posts, 5);
+  const chuncked = Utils.chunkArray(posts, 5);
 
   if (!Number(page) || Number(page) > chuncked.length) {
     notFound();

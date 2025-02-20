@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import { MetadataProvider } from "@/context/metadata-context";
-import { cacheMetadata, getCachedMetadata } from "@/services/supabase";
+import { CollectionProvider } from "@/context/collection-context";
+import { Supabase } from "@/services/supabase";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -13,29 +13,29 @@ export async function generateMetadata({
   // read route params
   const { owner } = await params;
 
-  let metadata = await getCachedMetadata(owner);
-
-  if (!metadata) {
-    await cacheMetadata(owner);
-    metadata = await getCachedMetadata(owner);
-
-    if (!metadata) {
-      return {};
-    }
+  const collection = await Supabase.getCollection(owner);
+  if (!collection) {
+    return {};
   }
 
+  const title = `${collection.settings.username ?? owner} | [Typestone]`;
+
   return {
-    title: `${metadata.username} [${owner}]  - Typestone`,
-    description: `Check out the ${metadata.username}'s contents`,
+    title: title,
+    description: `Check out the ${
+      collection.settings.username ?? owner
+    }'s contents`,
     openGraph: {
-      title: `${metadata.username} [${owner}]  - Typestone`,
-      description: `Check out the ${metadata.username}'s contents`,
-      siteName: `${metadata.username} [${owner}]  - Typestone`,
+      title: title,
+      description: `Check out the ${
+        collection.settings.username ?? owner
+      }'s contents`,
+      siteName: title,
       images: ["https://typestone.io/og-image.png"],
       type: "website",
     },
     twitter: {
-      title: `${metadata.username} [${owner}]  - Typestone`,
+      title: title,
       card: "summary_large_image",
       images: ["https://typestone.io/og-image.png"],
     },
@@ -51,28 +51,22 @@ export default async function Layout({
 }) {
   const { owner } = await params;
 
-  let metadata = await getCachedMetadata(owner);
-
-  if (!metadata) {
-    await cacheMetadata(owner);
-    metadata = await getCachedMetadata(owner);
-
-    if (!metadata) {
-      notFound();
-    }
+  const collection = await Supabase.getCollection(owner);
+  if (!collection) {
+    notFound();
   }
 
   return (
-    <MetadataProvider metadata={metadata}>
+    <CollectionProvider collection={collection}>
       <section className="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-5xl xl:px-0">
         <div className="h-screen">
           <Header />
 
           <main className="mb-auto">{children}</main>
 
-          <Footer username={metadata.username} />
+          <Footer username={collection.settings.username ?? owner} />
         </div>
       </section>
-    </MetadataProvider>
+    </CollectionProvider>
   );
 }

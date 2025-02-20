@@ -1,111 +1,43 @@
-"use server";
-
-import { ApiKey, Metadata } from "@/lib/types";
-import { single } from "@/lib/utils";
+import { Collection, Post, Settings } from "@/lib/types";
 import { createClient } from "@supabase/supabase-js";
-import { getInstallationID } from "./octokit";
-import {
-  cloneUserRepo,
-  deleteRepoDirectory,
-  generateMetadata,
-  hasNoTypestone,
-} from "./git";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+export class Supabase {
+  private static supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
-export async function createApiKey(owner: string) {
-  const { data, error } = await supabase
-    .from("api-key")
-    .insert({ owner })
-    .select();
+  static async upsertCollection(
+    owner: string,
+    settings?: Settings,
+    posts?: Post[]
+  ): Promise<boolean> {
+    owner = owner.toLowerCase();
+    const { error } = await this.supabase
+      .from("collections")
+      .upsert({ owner, settings, posts }, { onConflict: "owner" });
 
-  if (error) return undefined;
+    if (error) return false;
 
-  return single(data as [ApiKey]).key;
-}
-
-export async function getApiKeys() {
-  const { data, error } = await supabase.from("api-key").select("*");
-
-  if (error) return undefined;
-
-  return data as ApiKey[];
-}
-
-export async function getApiKey(owner: string) {
-  const { data, error } = await supabase
-    .from("api-key")
-    .select("*")
-    .eq("owner", owner)
-    .single();
-
-  if (error) return undefined;
-
-  return (data as ApiKey).key;
-}
-
-export async function existsApiKey(apiKey: string) {
-  const { error } = await supabase
-    .from("api-key")
-    .select("*")
-    .eq("key", apiKey)
-    .single();
-
-  if (error) return false;
-
-  return true;
-}
-
-export async function deleteKey(owner: string) {
-  const { error } = await supabase.from("api-key").delete().eq("owner", owner);
-
-  if (error) return false;
-
-  return true;
-}
-
-export async function cacheMetadata(owner: string) {
-  const installationId = await getInstallationID(owner);
-  if (!installationId) {
-    return false;
+    return true;
   }
 
-  const cloneResult = await cloneUserRepo(owner);
-  if (!cloneResult) {
-    return false;
+  static async getCollection(owner: string): Promise<Collection | undefined> {
+    owner = owner.toLowerCase();
+    const { data, error } = await this.supabase
+      .from("collections")
+      .select("owner, settings, posts")
+      .eq("owner", owner)
+      .single();
+
+    if (error) return undefined;
+
+    const result: Collection = data;
+    return result;
   }
 
-  const noTypestone = hasNoTypestone(owner);
-  if (noTypestone) {
-    deleteRepoDirectory(owner);
-    return false;
+  static async deleteCollection(owner: string) {
+    owner = owner.toLowerCase();
+    await this.supabase.from("collections").delete().eq("owner", owner);
   }
-
-  const metadata = await generateMetadata(owner);
-  deleteRepoDirectory(owner);
-
-  const { error } = await supabase.from("metadata").insert({ owner, metadata });
-
-  if (error) return false;
-
-  return true;
-}
-
-export async function getCachedMetadata(owner: string) {
-  const { data, error } = await supabase
-    .from("metadata")
-    .select("metadata")
-    .eq("owner", owner)
-    .single();
-
-  if (error) return null;
-
-  return data.metadata as Metadata;
-}
-
-export async function invalidateCache(owner: string) {
-  await supabase.from("metadata").delete().eq("owner", owner);
 }

@@ -6,7 +6,7 @@ import { Dialog } from "radix-ui";
 import { Post } from "@/lib/types";
 import Link from "next/link";
 import { format } from "date-fns";
-import { extractHrefFromPath } from "@/lib/utils";
+import { Utils } from "@/lib/utils";
 
 export default function SearchButton({ posts }: { posts: Post[] }) {
   const [open, setOpen] = useState(false);
@@ -84,7 +84,7 @@ export default function SearchButton({ posts }: { posts: Post[] }) {
                         return (
                           <Link
                             key={post.path}
-                            href={extractHrefFromPath(post.path)}
+                            href={`/${Utils.getSlug(post.path)}`}
                             onClick={() => {
                               setOpen(false);
                             }}
